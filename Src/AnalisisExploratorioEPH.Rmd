@@ -1,0 +1,373 @@
+---
+title: "Analisis Exploratoria de Datos - EPH"
+output: Resultado
+---
+################################################################################################################################################################################################################################################################################################################################
+                                                                    PREPARAMOS PAQUETES Y LIBRERIAS
+################################################################################################################################################################################################################################################################################################################################
+
+
+#Paquetes y librerias que utilizaremos
+```{r}
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+################################################################################################################################################################################################################################################################################################################################
+                                                                    CARGAMOS Y ANALIZAMOS EL DATA SET
+################################################################################################################################################################################################################################################################################################################################
+
+#Cargamos el dataset
+```{r}
+ds <- read.csv("usu_individual_t217.txt",header = TRUE,sep = ';',stringsAsFactors = FALSE,encoding = 'utf-8')
+```
+
+#Analizamos el dataset
+```{r}
+head(ds)
+tail(ds)
+str(ds)
+summary(ds)
+
+
+```
+
+################################################################################################################################################################################################################################################################################################################################
+                                                                    TRABAJAMOS CON LOS DISTINTOS CAMPOS DEL DATA SET
+################################################################################################################################################################################################################################################################################################################################
+
+#Trabajamos con el campo AGLOMERADO
+```{r}
+#Analizamos la estructura del campo
+head(ds$AGLOMERADO)
+summary(ds$AGLOMERADO)
+str(ds$AGLOMERADO)
+sum(is.na(ds$AGLOMERADO))
+table(ds$AGLOMERADO)
+
+#Renombramos las distintas observaciones
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 02,'Gran La Plata', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 03,'Bahia Blanca - Cerri', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 04,'Gran Rosario', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 05,'Gran Santa Fé', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 06,'Gran Paraná', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 07,'Posadas', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 08,'Gran Resistencia', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 09,'Cdro. Rivadavia - R. Tilly', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 10,'Gran Mendoza', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 12,'Corrientes', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 13,'Gran Córdoba', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 14,'Concordia', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 15,'Formosa', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 17,'Neuquén - Plottier', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 18,'S.del Estero - La Banda', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 19,'Jujuy - Palpalá', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 20,'Río Gallegos', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 22,'Gran Catamarca', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 23,'Salta', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 25,'La Rioja', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 26,'San Luis - El chorrillo', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 27,'Gran San Juan', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 29,'Gran Tucumán - T. Viejo', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 30,'Santa Rosa - Toay', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 31,'Ushuaua - Río Grande', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 32,'Ciudad de Bs As', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 33,'Partidos del GBA', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 34,'Mar del Plata - Batán', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 36,'Río Cuarto', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 38,'San Nicolás - Villa Constitución', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 91,'Rawson  Trelew', ds$AGLOMERADO)
+ds$AGLOMERADO <- ifelse(ds$AGLOMERADO == 93,'Viedma - Carmen de Patagones', ds$AGLOMERADO)
+
+```
+
+#Trabajamos con el campo REGION
+```{r}
+#Analizamos la estructura del campo
+head(ds$REGION)
+summary(ds$REGION)
+str(ds$REGION)
+sum(is.na(ds$REGION))
+table(ds$REGION)
+
+#Renombramos las distintas observaciones
+ds$REGION <- ifelse(ds$REGION == 01,'Gran Buenos Aires',ds$REGION)
+ds$REGION <- ifelse(ds$REGION == 40,'Noroeste',ds$REGION)
+ds$REGION <- ifelse(ds$REGION == 41,'Nordeste',ds$REGION)
+ds$REGION <- ifelse(ds$REGION == 42,'Cuyo',ds$REGION)
+ds$REGION <- ifelse(ds$REGION == 43,'Pampeana',ds$REGION)
+ds$REGION <- ifelse(ds$REGION == 44,'Patagónica',ds$REGION)
+
+
+```
+
+#Trabajamos con el campo CH04 - Sexo
+```{r}
+#Analizamos la estructura del campo
+head(ds$CH04)
+summary(ds$CH04)
+str(ds$CH04)
+sum(is.na(ds$CH04))
+table(ds$CH04)
+
+#Renombramos las distintas observaciones
+ds$CH04 <- ifelse(ds$CH04 == 1,'Varón','Mujer')
+
+#Renombro la columna
+colnames(ds)[which(names(ds) == "CH04")] <- "SEXO"
+```
+
+
+
+#Trabajamos con el campo CH06 - Edad
+```{r}
+#Analizamos la estructura del campo
+head(ds$CH06)
+summary(ds$CH06)
+str(ds$CH06)
+sum(is.na(ds$CH06))
+#Observamos que existen edades con valores negativos
+
+#Tomamos la decision de convertir los -1 por el valor 1
+ds$CH06 <- ifelse(ds$CH06 == -1, 1, ds$CH06)
+
+#Renombro la columna
+colnames(ds)[which(names(ds) == "CH06")] <- "EDAD"
+```
+
+#Trabajamos con el campo CH07 - Estado Civil
+```{r}
+#Analizamos la estructura del campo
+head(ds$CH07)
+summary(ds$CH07)
+str(ds$CH07)
+sum(is.na(ds$CH07))
+
+#Renombramos las distintas observaciones
+ds$CH07 <- ifelse(ds$CH07 == "1", "Unido", ds$CH07 )
+ds$CH07 <- ifelse(ds$CH07 == "2", "Casado", ds$CH07 )
+ds$CH07 <- ifelse(ds$CH07 == "3", "Divorciado", ds$CH07 )
+ds$CH07 <- ifelse(ds$CH07 == "4", "Viudo", ds$CH07 )
+ds$CH07 <- ifelse(ds$CH07 == "5", "Soltero", ds$CH07 )
+
+#Observamos como se encuentran distribuidos los diferentes estados civiles
+table(ds$CH07)
+
+#Observando la anterior funcion, podemos concluir que la moda se encuentra en el estado civil = soltero, entonces por ello asignare aquellos valores outliers a dicho valor.
+modaEstadoCivil <- "Soltero"
+ds$CH07 <- ifelse(ds$CH07 == "9", modaEstadoCivil, ds$CH07 )
+
+
+#Renombro la columna
+colnames(ds)[which(names(ds) == "CH07")] <- "ESTADO_CIVIL"
+```
+
+#Trabajamos con el campo CH09 - Sabe leer y escribir
+```{r}
+#Analizamos la estructura del campo
+head(ds$CH09)
+summary(ds$CH09)
+str(ds$CH09)
+sum(is.na(ds$CH09))
+table(ds$CH09)
+
+#Podemos observar que hay un valor que no coincide con las opciones, es el numero 9.
+#Contamos la cantidad de veces que aparece, y en base a ello lo trataremos.
+sum(ds$CH09==9)
+#Como no es representativo, lo agregaremos a la media
+
+#Renombramos las distintas observaciones
+ds$CH09 <- ifelse(ds$CH09 == 1 |  ds$CH09 == 9 , "Si", ds$CH09)
+ds$CH09 <- ifelse(ds$CH09 == 2, "No", ds$CH09)
+ds$CH09 <- ifelse(ds$CH09 == 3, "Menor de 2 años", ds$CH09)
+
+#Renombro la columna
+colnames(ds)[which(names(ds) == "CH09")] <- "LEER_Y_ESCRIBIR"
+```
+
+
+#Trabajamos con el campo IPCF  Monto de ingreso per cápita familiar
+```{r}
+#Analizamos la estructura del campo
+head(ds$IPCF)
+summary(ds$IPCF)
+str(ds$IPCF)
+sum(is.na(ds$IPCF))
+```
+
+#Trabajamos con el campo NIVEL_ED
+```{r}
+#Analizamos la estructura del campo
+head(ds$NIVEL_ED)
+summary(ds$NIVEL_ED)
+str(ds$NIVEL_ED)
+sum(is.na(ds$NIVEL_ED))
+
+#Renombramos las distintas observaciones
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 1,'Primaria Incompleta',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 2,'Primaria Completa',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 3,'Secundaria Incompleta',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 4,'Secundaria completa',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 5,'Superior Universitaria Incompleta',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 6,'Superior Universitaria Completa',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 7,'Sin instrucción',ds$NIVEL_ED)
+ds$NIVEL_ED <- ifelse(ds$NIVEL_ED == 9,'NS./ Nr.',ds$NIVEL_ED)
+
+```
+
+#Trabajamos con el campo CH11 - Establecimiento Público o Privado
+```{r}
+#Analizamos la estructura del campo
+head(ds$CH11)
+summary(ds$CH11)
+str(ds$CH11)
+sum(is.na(ds$CH11))
+
+#Cuento cantidades de establecimientos publicos
+length(which(ds$CH11 == 1))
+#Cuento cantidades de establecimientos privados
+length(which(ds$CH11 == 2))
+
+#Observando las cantidades, podemos tratar aquellos valores que no cumplen con las caracteristicas de los datos.
+#Tenemos 40903 observaciones en 0, las podemos distribuir equitativamente en los demas valores posibles. Entonces distribuyo en sector publico, privado y ns/nr
+table(ds$CH11)
+
+#Para ello repartiremos de manera equitativa la cantidad de valores cero en las otros valores
+repartirCerosPublico <- round(length(which(ds$CH11 == 0))/3,0)
+repartirCerosPrivado <- round(length(which(ds$CH11 == 0))/3,0)
+repartirCerosNSNR <- round(length(which(ds$CH11 == 0))/3,0)
+
+i <- 1
+while(repartirCerosPublico>=1){
+    if(ds$CH11[i]==0){
+    ds$CH11[i] <- 1
+    repartirCerosPublico <- repartirCerosPublico-1
+    i <- i+1
+    }else{
+      i <- i+1
+    } 
+}
+
+i <- 1
+while(repartirCerosPrivado>=1){
+    if(ds$CH11[i]==0){
+    ds$CH11[i] <- 2
+    repartirCerosPrivado <- repartirCerosPrivado-1
+    i <- i+1
+    }else{
+      i <- i+1
+    } 
+}
+
+i <- 1
+while(repartirCerosNSNR>=1){
+    if(ds$CH11[i]==0){
+    ds$CH11[i] <- 9
+    repartirCerosNSNR <- repartirCerosNSNR-1
+    i <- i+1
+    }else{
+      i <- i+1
+    } 
+}
+
+#Renombramos las distintas observaciones
+ds$CH11 <- ifelse(ds$CH11== 1, "Público",ds$CH11)
+ds$CH11 <- ifelse(ds$CH11== 2, "Privado",ds$CH11)
+ds$CH11 <- ifelse(ds$CH11== 9, "Ns./Nr.",ds$CH11)
+
+#Renombro la columna
+colnames(ds)[which(names(ds) == "CH11")] <- "GESTION"
+```
+
+#Trabajamos con el campo ESTADO - Condición de actividad
+```{r}
+head(ds$ESTADO)
+summary(ds$ESTADO)
+str(ds$ESTADO)
+sum(is.na(ds$ESTADO))
+table(ds$ESTADO)
+
+#Renombramos las distintas observaciones
+ds$ESTADO <- ifelse(ds$ESTADO == 0, "Entrevista no realizada",ds$ESTADO)
+ds$ESTADO <- ifelse(ds$ESTADO == 1, "Ocupado",ds$ESTADO)
+ds$ESTADO <- ifelse(ds$ESTADO == 2, "Desocupado",ds$ESTADO)
+ds$ESTADO <- ifelse(ds$ESTADO == 3, "Inactivo",ds$ESTADO)
+ds$ESTADO <- ifelse(ds$ESTADO == 4, "Menor de 10 años",ds$ESTADO)
+
+```
+
+
+################################################################################################################################################################################################################################################################################################################################
+                                                                    PROPONEMOS DIFERENTES DISTRIBUCIONES
+################################################################################################################################################################################################################################################################################################################################
+
+#Distribucion por edad
+```{r}
+#Como tengo que realizar observaciones sobre una sola variable, utilizo el grafico de histograma
+hist(ds$EDAD,xlab = "Edad", ylab = "Observaciones", col ="tomato")
+qplot(x=EDAD, data = ds, bins =20, geom= 'histogram')
+
+```
+
+#Distribucion edad por region
+```{r}
+qplot(y=EDAD, x=REGION, data = ds, geom='boxplot',ylab = "EDAD")
+
+aggregate(EDAD~REGION, data = ds, FUN = 'max')
+aggregate(EDAD~REGION, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por aglomerado
+```{r}
+qplot(y=EDAD, x=AGLOMERADO, data = ds, geom='boxplot',ylab = "EDAD")
+
+aggregate(EDAD~AGLOMERADO, data = ds, FUN = 'max')
+aggregate(EDAD~AGLOMERADO, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por nivel educativo
+```{r}
+qplot(y=EDAD, x=NIVEL_ED, data = ds, geom='boxplot',ylab = "EDAD")
+
+aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'max')
+aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por establecimiento
+
+```{r}
+qplot(y=EDAD, x=GESTION, data = ds, geom='boxplot',ylab = "EDAD")
+
+aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'max')
+aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'mean')
+```
+
+
+#Distribucion edad por sexo
+```{r}
+qplot(y=EDAD, x=SEXO, data = ds, geom='boxplot',ylab = "EDAD")
+aggregate(EDAD~SEXO, data = ds, FUN = 'max')
+aggregate(EDAD~SEXO, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por estado civil
+```{r}
+qplot(y=EDAD, x=ESTADO_CIVIL, data = ds, geom='boxplot',ylab = "EDAD")
+aggregate(EDAD~ESTADO_CIVIL, data = ds, FUN = 'max')
+aggregate(EDAD~ESTADO_CIVIL, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por ¿Sabe leer y escribir?
+```{r}
+qplot(y=EDAD, x=LEER_Y_ESCRIBIR, data = ds, geom='boxplot',ylab = "EDAD")
+aggregate(EDAD~LEER_Y_ESCRIBIR, data = ds, FUN = 'max')
+aggregate(EDAD~LEER_Y_ESCRIBIR, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por ESTADO - Condicion de Actividad
+```{r}
+qplot(y=EDAD, x=ESTADO, data = ds, geom='boxplot',ylab = "EDAD")
+aggregate(EDAD~ESTADO, data = ds, FUN = 'max')
+aggregate(EDAD~ESTADO, data = ds, FUN = 'mean')
+```
+
