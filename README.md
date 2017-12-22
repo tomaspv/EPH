@@ -7,4 +7,5 @@
   - **SRC**: Carpeta con la codificacion del proyecto.
   - **Hipotesis**: Carpeta que contendra todo el analisis realizado en base al codigo, junto a las hipotesis como las respuestas               correspondientes.
   - **Anexos**: Carpeta que contendra todo archivo de interes relacionado al proyecto.
+  - **Dataset**: Carpeta que contendra el dataset utilizado para llevar a cabo el proyecto.
   
