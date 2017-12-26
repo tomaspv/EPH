@@ -11,6 +11,7 @@ output: Resultado
 ```{r}
 install.packages("ggplot2")
 library(ggplot2)
+
 ```
 
 ################################################################################################################################################################################################################################################################################################################################
@@ -192,7 +193,29 @@ colnames(ds)[which(names(ds) == "CH09")] <- "LEER_Y_ESCRIBIR"
 head(ds$IPCF)
 summary(ds$IPCF)
 str(ds$IPCF)
+
+#El campo figura como character, nosotros lo necesitamos de tipo INT para realizar calculos
+ds$IPCF <- as.integer(ds$IPCF)
+#Se agregan muchos NA, por ello vamos a ver que opcion es la mejorar para tratarlos.
 sum(is.na(ds$IPCF))
+#En total son 12435, y nuestro ds consta de 59755. Lo que haremos es calcular la media de los sueldos, y donde haya un NA coloca la media.
+mediaSalarial <- mean(ds$IPCF,na.rm = TRUE) 
+ds$IPCF <- ifelse(is.na(ds$IPCF)==TRUE,mediaSalarial,ds$IPCF)
+
+#Otorgaremos un rango a los distintos IPCF. Para ello analizaremos los datos que nos arroje la variable summary.
+#Entonces vamos a segmentar por grupos cada 1k de ingresos, siendo los >10k los mayores.
+
+ds$RANGO_IPCF <- ifelse(ds$IPCF <=1000,1,
+                       ifelse(ds$IPCF<=2000,2,
+                              ifelse(ds$IPCF <=3000,3,
+                                     ifelse(ds$IPCF <=4000,4,
+                                            ifelse(ds$IPCF <=5000,5,
+                                                   ifelse(ds$IPCF <=6000,6,
+                                                          ifelse(ds$IPCF <=7000,7,
+                                                                 ifelse(ds$IPCF <=8000,8,
+                                                                        ifelse(ds$IPCF <=9000,9,10)))))))))
+
+
 ```
 
 #Trabajamos con el campo NIVEL_ED
@@ -301,17 +324,25 @@ ds$ESTADO <- ifelse(ds$ESTADO == 4, "Menor de 10 años",ds$ESTADO)
                                                                     PROPONEMOS DIFERENTES DISTRIBUCIONES
 ################################################################################################################################################################################################################################################################################################################################
 
+############################################################################EDAD################################################################################
 #Distribucion por edad
 ```{r}
-#Como tengo que realizar observaciones sobre una sola variable, utilizo el grafico de histograma
+#Usando HIST
 hist(ds$EDAD,xlab = "Edad", ylab = "Observaciones", col ="tomato")
+#Usando QPLOT
 qplot(x=EDAD, data = ds, bins =20, geom= 'histogram')
+
+table(ds$EDAD)
 
 ```
 
 #Distribucion edad por region
 ```{r}
-qplot(y=EDAD, x=REGION, data = ds, geom='boxplot',ylab = "EDAD")
+#Usando QPLOT
+qplot(x=REGION, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
+#Usando BOXPLOT
+boxplot(EDAD ~ REGION, data = ds, xlab= 'EDAD', ylab = 'REGION')
+
 
 aggregate(EDAD~REGION, data = ds, FUN = 'max')
 aggregate(EDAD~REGION, data = ds, FUN = 'mean')
@@ -319,7 +350,7 @@ aggregate(EDAD~REGION, data = ds, FUN = 'mean')
 
 #Distribucion edad por aglomerado
 ```{r}
-qplot(y=EDAD, x=AGLOMERADO, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=AGLOMERADO, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
 
 aggregate(EDAD~AGLOMERADO, data = ds, FUN = 'max')
 aggregate(EDAD~AGLOMERADO, data = ds, FUN = 'mean')
@@ -327,7 +358,7 @@ aggregate(EDAD~AGLOMERADO, data = ds, FUN = 'mean')
 
 #Distribucion edad por nivel educativo
 ```{r}
-qplot(y=EDAD, x=NIVEL_ED, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=NIVEL_ED, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
 
 aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'max')
 aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'mean')
@@ -336,38 +367,108 @@ aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'mean')
 #Distribucion edad por establecimiento
 
 ```{r}
-qplot(y=EDAD, x=GESTION, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=GESTION, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
 
 aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'max')
 aggregate(EDAD~NIVEL_ED, data = ds, FUN = 'mean')
 ```
 
-
 #Distribucion edad por sexo
 ```{r}
-qplot(y=EDAD, x=SEXO, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=SEXO, y=EDAD,data = ds, geom='boxplot',ylab = "EDAD")
 aggregate(EDAD~SEXO, data = ds, FUN = 'max')
 aggregate(EDAD~SEXO, data = ds, FUN = 'mean')
 ```
 
 #Distribucion edad por estado civil
 ```{r}
-qplot(y=EDAD, x=ESTADO_CIVIL, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=ESTADO_CIVIL, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
 aggregate(EDAD~ESTADO_CIVIL, data = ds, FUN = 'max')
 aggregate(EDAD~ESTADO_CIVIL, data = ds, FUN = 'mean')
 ```
 
 #Distribucion edad por ¿Sabe leer y escribir?
 ```{r}
-qplot(y=EDAD, x=LEER_Y_ESCRIBIR, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=LEER_Y_ESCRIBIR, y=EDAD,data = ds, geom='boxplot',ylab = "EDAD")
 aggregate(EDAD~LEER_Y_ESCRIBIR, data = ds, FUN = 'max')
 aggregate(EDAD~LEER_Y_ESCRIBIR, data = ds, FUN = 'mean')
 ```
 
 #Distribucion edad por ESTADO - Condicion de Actividad
 ```{r}
-qplot(y=EDAD, x=ESTADO, data = ds, geom='boxplot',ylab = "EDAD")
+qplot(x=ESTADO, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
 aggregate(EDAD~ESTADO, data = ds, FUN = 'max')
 aggregate(EDAD~ESTADO, data = ds, FUN = 'mean')
+```
+
+#Distribucion edad por RANGO_IPCF
+```{r}
+qplot(x=RANGO_IPCF, y=EDAD, data = ds, geom='boxplot',ylab = "EDAD")
+aggregate(EDAD~RANGO_IPCF, data = ds, FUN = 'mean')
+
+```
+
+#Distribucion edad por IPCF y por Estado Civil
+```{r}
+#Como existe demasiada dispersion en el IPCF utilizo la funcion logaritmo
+plot(x = log(ds$IPCF), y = ds$EDAD, xlab = 'ingresos', ylab = 'edad', pch=21)
+
+ggplot(ds, aes(x = log(ds$IPCF),y = ds$EDAD, color =ds$ESTADO_CIVIL))
++ geom_point(alpha=0.9) 
++ labs(x='IPCF', y = 'EDAD',colour = 'Descripciones')
+```
+
+
+############################################################################REGION##############################################################################
+#Distribucion por region
+```{r}
+#Usando QPLOT
+qplot(x=REGION, data = ds, bins =20, geom= 'bar', ylab = "Cantidad Media poblacion")
+#Usando BAR
+bar
+```
+
+############################################################################SEXO################################################################################
+#Distribucion por sexo
+```{r}
+qplot(ds$SEXO,geom = 'bar', xlab = "Tipo Sexo", ylab = "Cantidad Media")
+```
+
+############################################################################ESTADOCIVIL#########################################################################
+#Distribucion por estado civil
+
+```{r}
+qplot(ds$ESTADO_CIVIL,geom = 'bar', xlab = "Tipo estado civil", ylab = "Cantidad Media")
+```
+
+############################################################################LECTURA_ESCRITURA###################################################################
+#Distribucion por sabe leer y escribir
+```{r}
+qplot(ds$LEER_Y_ESCRIBIR,geom = 'bar', xlab = "Sabe leer y escribir", ylab = "Cantidad Media")
+```
+
+############################################################################IPCF################################################################################
+#Distribucion por IPCF
+```{r}
+qplot(x=ds$IPCF, bins =50, geom= 'histogram', ylab = "Cantidad Observaciones", xlab = "Salario")
+```
+
+############################################################################ESTADOACTIVIDAD#####################################################################
+#Distribucion por estado
+```{r}
+qplot(ds$ESTADO,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
+```
+
+############################################################################NIVELEDUCATIVO######################################################################
+#Distribucion por nivel educativo
+```{r}
+qplot(ds$NIVEL_ED,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
+```
+
+############################################################################GESTION######################################################################
+#Distribucion por tipo de gestion del establecimiento
+
+```{r}
+qplot(ds$GESTION,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
 ```
 
