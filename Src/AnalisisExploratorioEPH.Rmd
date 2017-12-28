@@ -5,7 +5,6 @@ output:
   pdf_document: default
   html_document: default
 ---
-
 PREPARAMOS PAQUETES Y LIBRERIAS
 #Paquetes y librerias que utilizaremos
 ```{r,eval=FALSE}
@@ -13,19 +12,17 @@ PREPARAMOS PAQUETES Y LIBRERIAS
 install.packages("lmtest", repos = "http://cran.us.r-project.org")
 install.packages(c("knitr", "rmarkdown"))
 install.packages("ggplot2")
-library(Knitr)
 library(rmarkdown)
 library(ggplot2)
 
 ```
-
 
 CARGAMOS Y ANALIZAMOS EL DATA SET
 #Cargamos el dataset
 ```{r}
 require(ggplot2)
 require(qplot)
-ds <- read.csv("/Dataset/usu_individual_t217.txt",header = TRUE,sep = ';',stringsAsFactors = FALSE,encoding = 'utf-8')
+ds <- read.csv("C:/Users/a987568/Downloads/EPH 2017/Dataset/usu_individual_t217.txt",header = TRUE,sep = ';',stringsAsFactors = FALSE,encoding = 'utf-8')
 ```
 
 #Analizamos el dataset
@@ -36,7 +33,6 @@ str(ds)
 summary(ds)
 
 ```
-
 
 TRABAJAMOS CON LOS DISTINTOS CAMPOS DEL DATA SET
 #Trabajamos con el campo AGLOMERADO
@@ -118,8 +114,6 @@ ds$CH04 <- ifelse(ds$CH04 == 1,'Varón','Mujer')
 colnames(ds)[which(names(ds) == "CH04")] <- "SEXO"
 ```
 
-
-
 #Trabajamos con el campo CH06 - Edad
 ```{r}
 #Analizamos la estructura del campo
@@ -185,7 +179,6 @@ ds$CH09 <- ifelse(ds$CH09 == 3, "Menor de 2 años", ds$CH09)
 #Renombro la columna
 colnames(ds)[which(names(ds) == "CH09")] <- "LEER_Y_ESCRIBIR"
 ```
-
 
 #Trabajamos con el campo IPCF  Monto de ingreso per cápita familiar
 ```{r}
@@ -319,18 +312,13 @@ ds$ESTADO <- ifelse(ds$ESTADO == 4, "Menor de 10 años",ds$ESTADO)
 
 ```
 
-
 PROPONEMOS DIFERENTES DISTRIBUCIONES
 EDAD
 #Distribucion por edad
 ```{r}
-#HISTOGRAMA
-edadGraficoHistograma <- hist(ds$EDAD,xlab = "Edad", ylab = "Observaciones", col ="tomato")
-edadGraficoHistograma2 <- qplot(x=EDAD, data = ds, bins =20, geom= 'histogram')
-
-edadGraficoHistograma
-edadGraficoHistograma2
-
+#Grafico Barras
+edadGraficoBar <- qplot(x=EDAD, data = ds, geom= 'bar')
+edadGraficoBar
 
 #BOXPLOT
 edadBoxPlot <- boxplot(ds$EDAD, ylab= 'Edades', col = 'burlywood1')
@@ -436,7 +424,7 @@ AGLOMERADO
 #Distribucion por Aglomeracion
 ```{r}
 #Usando QPLOT
-AglomeracionGraficoBarras <- qplot(x=AGLOMERADO, data = ds, bins =20, geom= 'bar', ylab = "Cantidad Media poblacion")
+AglomeracionGraficoBarras <- qplot(x=AGLOMERADO, data = ds, bins =20, geom= 'bar', ylab = "Cantidad poblacion")
 AglomeracionGraficoBarras
 
 aglomeracion <- sort(table(ds$AGLOMERADO),decreasing = TRUE)
@@ -445,7 +433,6 @@ tablaTotalesAglomeracion <- matrix(aglomeracion,dimnames = dimnames(aglomeracion
 colnames(tablaTotalesAglomeracion) <- paste('Totales')
 tablaTotalesAglomeracion
 
-qplot(x=AGLOMERADO, data = ds, bins =20, geom= 'bar', ylab = "Cantidad Media poblacion")
 ```
 
 REGION
@@ -453,7 +440,7 @@ REGION
 ```{r}
 #Usando QPLOT
 Nombre_Regiones <- ds$REGION
-regionGraficoBarras <- qplot(x=REGION, data = ds, bins =20, geom= 'bar', ylab = "Cantidad Media poblacion", fill = Nombre_Regiones)
+regionGraficoBarras <- qplot(x=REGION, data = ds, bins =20, geom= 'bar', ylab = "Cantidad poblacion", fill = Nombre_Regiones)
 regionGraficoBarras
 
 regiones <- sort(table(ds$REGION),decreasing = TRUE)
@@ -466,7 +453,7 @@ tablaTotalesRegion
 SEXO
 #Distribucion por sexo
 ```{r}
-sexoGraficoBarras <- qplot(ds$SEXO,geom = 'bar', xlab = "Tipo Sexo", ylab = "Cantidad Media")
+sexoGraficoBarras <- qplot(ds$SEXO,geom = 'bar', xlab = "Tipo Sexo", ylab = "Cantidad")
 sexoGraficoBarras
 
 sexo <- sort(table(ds$SEXO),decreasing = TRUE)
@@ -479,7 +466,7 @@ tablaTotalesSexo
 ESTADOCIVIL
 #Distribucion por estado civil
 ```{r}
-estadoCivilGraficoBarras <- qplot(ds$ESTADO_CIVIL,geom = 'bar', xlab = "Tipo estado civil", ylab = "Cantidad Media")
+estadoCivilGraficoBarras <- qplot(ds$ESTADO_CIVIL,geom = 'bar', xlab = "Tipo estado civil", ylab = "Cantidad")
 estadoCivilGraficoBarras
 
 estadoCivil <- sort(table(ds$ESTADO_CIVIL),decreasing = TRUE)
@@ -492,7 +479,7 @@ tablaTotalesEstadoCivil
 LECTURA_ESCRITURA
 #Distribucion por sabe leer y escribir
 ```{r}
-leerYescribirGraficoBarras <- qplot(ds$LEER_Y_ESCRIBIR,geom = 'bar', xlab = "Sabe leer y escribir", ylab = "Cantidad Media")
+leerYescribirGraficoBarras <- qplot(ds$LEER_Y_ESCRIBIR,geom = 'bar', xlab = "Sabe leer y escribir", ylab = "Cantidad")
 leerYescribirGraficoBarras
 
 leerYescribir <- sort(table(ds$LEER_Y_ESCRIBIR),decreasing = TRUE)
@@ -517,13 +504,14 @@ tablaTotalesIngresosPCF
 rango_IPCF <- ds$RANGO_IPCF
 rango_Edad <- ds$EDAD
 tipo_Sexo <- ds$SEXO
-ggplot(ds, aes(fill= rango_IPCF, x=tipo_Sexo, y=rango_Edad)) +  geom_bar(position="dodge", stat="identity", col= 'black')
+IPCFporSexoYedad <- ggplot(ds, aes(fill= rango_IPCF, x=tipo_Sexo, y=rango_Edad)) +  geom_bar(position="dodge", stat="identity", col= 'black')
+IPCFporSexoYedad
 ```
 
 ESTADOACTIVIDAD
 #Distribucion por estado
 ```{r}
-TipoActividadGraficoBarras <- qplot(ds$ESTADO,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
+TipoActividadGraficoBarras <- qplot(ds$ESTADO,geom = 'bar', xlab = "Tipo", ylab = "Cantidad")
 TipoActividadGraficoBarras
 
 tipoActividad <- sort(table(ds$ESTADO),decreasing = TRUE)
@@ -537,7 +525,7 @@ tablaTotalesTipoActividad
 NIVELEDUCATIVO
 #Distribucion por nivel educativo
 ```{r}
-nivelEducativoGraficoBarras <- qplot(ds$NIVEL_ED,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
+nivelEducativoGraficoBarras <- qplot(ds$NIVEL_ED,geom = 'bar', xlab = "Tipo", ylab = "Cantidad")
 nivelEducativoGraficoBarras
 
 nivelEducativo <- sort(table(ds$NIVEL_ED),decreasing = TRUE)
@@ -550,7 +538,7 @@ tablaTotalesNivelEducativo
 GESTION
 #Distribucion por tipo de gestion del establecimiento
 ```{r}
-GestionEstablecimientoGraficoBarras <- qplot(ds$GESTION,geom = 'bar', xlab = "Tipo", ylab = "Cantidad Media")
+GestionEstablecimientoGraficoBarras <- qplot(ds$GESTION,geom = 'bar', xlab = "Tipo", ylab = "Cantidad")
 GestionEstablecimientoGraficoBarras
 
 gestionEstablecimiento <- sort(table(ds$GESTION),decreasing = TRUE)
@@ -579,23 +567,51 @@ tablaTotalesRegion
 •	Sexo
 ```{r,eval=FALSE}
 #De la totalidad de encuestados, el sexo que predomina es el masculino sobre el femenino.
-SexoGraficoBarras
+sexoGraficoBarras
 #RTA: Es falsa la afirmacion. El sexo que predomina en la encuesta es el sexo feminino con mas de 30k media de observaciones
 
 ```
 
 •	Edad
 ```{r}
+#El promedio de edad de la gente encuestado es de 50 años.
+edadGraficoBar
+tablaTotalesEdades
+summary(ds$EDAD)
+#RTA: La afirmacion es falsa, el promedio de edad de gente encuestada es aproximadamente de 35 años de edad.
 
+#Existe alguina relacion entre la edad y el IPCF?
+#Scatter plot
+plot(log(ds$IPCF),ds$EDAD)
+
+#Pairs y cor  me ayuda a observar si existe alguna correlacion entre las variables
+df.Edad_IPCF <- data.frame(ds$EDAD,ds$IPCF)
+pairs(df.Edad_IPCF)
+cor(df.Edad_IPCF)
+
+#RTA: A priori segun los datos que nos arroja el diagrama de dispersion, podemos decir que no existe una relacion entre las variables propuestas.
 ```
 
 •	Estado Civil
 ```{r}
-
+#Existe una mayor cantidad de solteros que casados.
+estadoCivilGraficoBarras
+tablaTotalesEstadoCivil
+#RTA: Es verdadera la afirmacion. Podemos observar que la cantidad de solteros asciende a un total de 30k mientras que los casados a 14k.
 ```
 
 •	Sabe leer y escribir
 ```{r}
+#Existe una mayor proporcion que no sabe leer en Gran Buenos Aires en comparacion al resto de las regiones.
+
+#Esta funcionalidad me permite sacar el porcentaje de las variables que les pase por parametro. El 1 sinigifca que analiza por fila y el 2 por columna
+prop.table(table(ds$REGION,ds$LEER_Y_ESCRIBIR),1)
+
+#Grafico lo anterior
+qplot(x= REGION, data= ds, geom= 'bar', facets= ds$LEER_Y_ESCRIBIR~.)
+
+#RTA: Es falsa la afirmacion. En general el promedio de la gente que sabe leer y escribir ronda en torno al 90%.
+
 
 ```
 
