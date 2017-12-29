@@ -22,7 +22,7 @@ CARGAMOS Y ANALIZAMOS EL DATA SET
 ```{r}
 require(ggplot2)
 require(qplot)
-ds <- read.csv("C:/Users/a987568/Downloads/EPH 2017/Dataset/usu_individual_t217.txt",header = TRUE,sep = ';',stringsAsFactors = FALSE,encoding = 'utf-8')
+ds <- read.csv("Dataset/usu_individual_t217.txt",header = TRUE,sep = ';',stringsAsFactors = FALSE,encoding = 'utf-8')
 ```
 
 #Analizamos el dataset
@@ -589,6 +589,10 @@ df.Edad_IPCF <- data.frame(ds$EDAD,ds$IPCF)
 pairs(df.Edad_IPCF)
 cor(df.Edad_IPCF)
 
+graficoRelacionEdad_IPCF_EstadoCivil <- ggplot(ds, aes(x = log(ds$IPCF),y = ds$EDAD, color =ds$ESTADO_CIVIL))+ geom_point(alpha=0.9)+ labs(x='IPCF', y = 'EDAD',colour = 'Descripciones')
+
+graficoRelacionEdad_IPCF_EstadoCivil
+
 #RTA: A priori segun los datos que nos arroja el diagrama de dispersion, podemos decir que no existe una relacion entre las variables propuestas.
 ```
 
@@ -617,17 +621,67 @@ qplot(x= REGION, data= ds, geom= 'bar', facets= ds$LEER_Y_ESCRIBIR~.)
 
 •	IPCF  Monto de ingreso per cápita familiar
 ```{r}
+#Las personas solteras perciben un ipcf mayor que las casadas?
 
+graficoRelacionEdad_IPCF_EstadoCivil <- ggplot(ds, aes(x = log(ds$IPCF),y = ds$EDAD, color =(ds$ESTADO_CIVIL) ))+ geom_point(alpha=0.9)+ labs(x='IPCF', y = 'EDAD',colour = 'Descripciones')
+
+graficoRelacionEdad_IPCF_EstadoCivil
+
+
+PromedioIPCF <- (aggregate(RANGO_IPCF~ESTADO_CIVIL, data = ds, FUN = 'mean'))
+PromedioIPCF
+
+estadoCivilOrdenado <- sort(PromedioIPCF[,1],decreasing = T)
+ipcfOrdenado <- sort(PromedioIPCF[,2],decreasing = T)
+
+cbind(estadoCivilOrdenado,ipcfOrdenado)
+#RTA: Segun los datos obtenidos de PromedioIPCF llegamos a la conclusion que las personas solteras perciben un menor IPCF en contraposicion a los casados. Un dato a tener en cuenta que el mayor promedio de IPCF lo tienen las personas viudas.
 ```
 
 •	Nivel educativo
 ```{r}
+#Del total de encuestados, completaron los estudios secundarios-
+
+nivelEducativoGraficoBarras
+tablaTotalesNivelEducativo
+
+proporcionNivelEducativo <- prop.table(tablaTotalesNivelEducativo)
+proporcionNivelEducativo
+
+#RTA: De los datos obtenidos, llegamos a la conclusion que la mayoria del universo encuestado no completo la secundaria. Casi un 21% no completaron sus estudios secundarios.
 
 ```
 
 •	Establecimiento Público o Privado
 ```{r}
+#Existe una relacion entre el establecimiento al cual asiste el encuestado y los ipcf correspondientes?
+tablaTotalesGestionEstablecimiento
+GestionEstablecimientoGraficoBarras
+
+
+df.gestionNumerico <- ifelse(ds$GESTION == 'Público', 1,
+       ifelse(ds$GESTION == 'Privado',2,3))
+
+df.Gestion_IPCF <- data.frame(df.gestionNumerico,ds$IPCF)
+pairs(df.Gestion_IPCF)
+cor(df.gestionNumerico,ds$RANGO_IPCF)
+
+graficoRelacionGestion_IPCF <- ggplot(ds, aes(x = (ds$GESTION) ,y = log(ds$IPCF), color =(ds$GESTION)))+ geom_point(alpha=0.9)+ labs(x='Tipo Gestion', y = 'IPCF',colour = 'Descripciones')
+graficoRelacionGestion_IPCF
+
+#RTA: Luego de analizar los datos obtenidos, llegamos a la conclusion que no existe relacion alguna entre el tipo de gestion del establecimiento educativo a cual acude/acudio el encuestado con respecto al IPCF.
 
 ```
 
 •	ESTADO - Condición de actividad
+```{r}
+#Existe una mayor cantidad de personas desocupadas que ocupadas en el universo de encuestados.
+TipoActividadGraficoBarras
+tablaTotalesTipoActividad
+
+prop.table((tablaTotalesTipoActividad))
+
+#RTA: La afirmacion es falsa. El 40% de los encuestados se encuentran trabajando, mientras que el 0.03% se encuentra desocupado.
+
+```
+
